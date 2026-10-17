@@ -89,8 +89,11 @@ const music = (function initMusic() {
   const buttons = document.querySelectorAll("[data-music-toggle]");
   const floatBtn = document.getElementById("musicFloat");
   const audio = document.getElementById("bgMusic");
-  let useSynth = false;
+  // Caixinha de música gerada pelo navegador (padrão). Para usar um arquivo
+  // em <audio id="bgMusic">, troque para false.
+  let useSynth = true;
   let playing = false;
+  let userPaused = false; // pausou na flor: não volta a tocar sozinha
 
   audio.addEventListener(
     "error",
@@ -163,16 +166,23 @@ const music = (function initMusic() {
     osc2.stop(time + duration);
   }
 
-  function synthStart() {
+  function ensureCtx() {
     if (!ctx) {
       ctx = new (window.AudioContext || window.webkitAudioContext)();
       master = ctx.createGain();
       master.gain.value = 0.18;
       master.connect(ctx.destination);
     }
-    ctx.resume();
+    return ctx;
+  }
+
+  function synthStart() {
+    ensureCtx().resume();
+    clearInterval(timer);
     const beat = 0.42;
     timer = setInterval(() => {
+      // Áudio ainda bloqueado pelo navegador: não acumula notas
+      if (ctx.state !== "running") return;
       const t = ctx.currentTime + 0.05;
       const note = melody[step % melody.length];
       if (note) bell(midiToHz(note), t, 0.35, 1.6);
@@ -230,7 +240,11 @@ const music = (function initMusic() {
   }
 
   function toggle() {
-    if (playing) return pause();
+    if (playing) {
+      userPaused = true;
+      return pause();
+    }
+    userPaused = false;
     // Silencia o vídeo para não misturar sons
     const video = document.getElementById("heroVideo");
     const soundBtn = document.getElementById("videoSound");
@@ -243,6 +257,33 @@ const music = (function initMusic() {
   }
 
   buttons.forEach((btn) => btn.addEventListener("click", toggle));
+
+  /* --- Toca sozinha ---
+     Navegadores só liberam som depois de uma interação. Tenta ao abrir e,
+     se estiver bloqueado, começa no primeiro toque/clique/tecla na página. */
+  if (useSynth) {
+    const events = ["pointerdown", "pointerup", "touchend", "click", "keydown"];
+    const stop = () => events.forEach((ev) => document.removeEventListener(ev, onGesture, true));
+    const onGesture = (e) => {
+      // Os botões de música e de som do vídeo cuidam de si mesmos
+      if (e.target.closest?.("[data-music-toggle], #videoSound")) return;
+      if (userPaused) return stop();
+      if (!playing) play();
+      else ensureCtx().resume();
+      if (ctx && ctx.state === "running") stop();
+    };
+    events.forEach((ev) => document.addEventListener(ev, onGesture, true));
+
+    // Alguns navegadores (geralmente no computador) já permitem tocar ao abrir
+    try {
+      if (ensureCtx().state === "running") {
+        play();
+        stop();
+      }
+    } catch {
+      /* sem Web Audio: segue sem música */
+    }
+  }
 
   return { play, pause };
 })();
