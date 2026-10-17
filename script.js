@@ -8,7 +8,7 @@ const EVENT_DATE = new Date("2026-10-22T19:30:00-03:00");
 // Link do App da Web do Google Apps Script que grava as confirmações na planilha
 // (veja apps-script.gs). Termina em /exec.
 const SHEETS_URL =
-  "https://script.google.com/macros/s/AKfycbzt6o82hnWySy7cN3La6nXym5VPOneQVTC7d9U3_1zr7F9meUntdxbEWTxnLn3cQ6uENQ/exec";
+  "https://script.google.com/macros/s/AKfycbxr42EZmQWJ13nTqZU80fwxVwuhrt5TsQN0rpmJIQ0Wo7dxsgMFeI-ynsz5n9oWoOsZeA/exec";
 
 const prefersReducedMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)",
