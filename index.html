@@ -187,6 +187,21 @@
           <p class="rsvp__thanks-text" id="thanksText"></p>
         </div>
 
+        <!-- Balãozinho de recado para a Maya (abre ao confirmar) -->
+        <dialog class="note" id="noteDialog" aria-labelledby="noteTitle">
+          <form class="note__card" id="noteForm" method="dialog">
+            <button type="button" class="note__close" id="noteClose" aria-label="Voltar sem enviar">✕</button>
+            <p class="note__title" id="noteTitle">💌 Deixe um recadinho para a Maya</p>
+            <p class="note__hint" id="noteHint">Ela vai amar ler! (opcional)</p>
+            <textarea id="noteText" maxlength="300" rows="4" placeholder="Parabéns, Maya! Que seu dia seja cheio de aventuras… 🌸"></textarea>
+            <p class="note__count" aria-live="polite"><span id="noteCount">0</span>/300</p>
+            <div class="note__actions">
+              <button type="submit" class="btn btn--pink" value="send">✨ Enviar recadinho</button>
+              <button type="submit" class="btn btn--cream" value="skip">Enviar sem recado</button>
+            </div>
+          </form>
+        </dialog>
+
         <p class="rsvp__footer">🌸 Feito com <span class="heart">♥</span> para a Maya 🌸</p>
       </section>
 

@@ -332,7 +332,33 @@ const music = (function initMusic() {
     });
   }
 
-  form.addEventListener("submit", async (e) => {
+  /* --- Balãozinho de recado para a Maya --- */
+  const noteDialog = document.getElementById("noteDialog");
+  const noteText = document.getElementById("noteText");
+  const noteCount = document.getElementById("noteCount");
+  const noteHint = document.getElementById("noteHint");
+  let pending = null; // confirmação esperando o recado
+
+  noteText.addEventListener("input", () => {
+    noteCount.textContent = noteText.value.length;
+  });
+  document.getElementById("noteClose").addEventListener("click", () => {
+    noteDialog.close(""); // volta para o formulário sem enviar
+  });
+  // Toque fora do balão também volta sem enviar
+  noteDialog.addEventListener("click", (e) => {
+    if (e.target === noteDialog) noteDialog.close("");
+  });
+  noteDialog.addEventListener("close", () => {
+    const choice = noteDialog.returnValue;
+    const data = pending;
+    pending = null;
+    if (!data || (choice !== "send" && choice !== "skip")) return;
+    const message = choice === "send" ? noteText.value.trim() : "";
+    submitRsvp({ ...data, message });
+  });
+
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
     const answer = e.submitter?.dataset.answer || "yes";
     const name = nameInput.value.trim();
@@ -350,13 +376,36 @@ const music = (function initMusic() {
       return;
     }
 
-    const going = answer === "yes";
+    error.hidden = true;
+    pending = { name, guests, going: answer === "yes" };
+
+    // Navegadores muito antigos sem <dialog>: envia direto, sem recado
+    if (typeof noteDialog.showModal !== "function") {
+      const data = pending;
+      pending = null;
+      submitRsvp({ ...data, message: "" });
+      return;
+    }
+
+    noteHint.textContent = pending.going
+      ? "Ela vai amar ler! (opcional)"
+      : "Mesmo sem poder ir, um carinho faz o dia dela mais feliz! (opcional)";
+    noteDialog.returnValue = "";
+    noteDialog.showModal();
+    noteText.focus();
+  });
+
+  async function submitRsvp({ name, guests, going, message }) {
     const buttons = form.querySelectorAll("button");
     buttons.forEach((b) => (b.disabled = true));
-    error.hidden = true;
 
     try {
-      await saveToSheet({ name, guests: going ? guests : 0, attending: going });
+      await saveToSheet({
+        name,
+        guests: going ? guests : 0,
+        attending: going,
+        message,
+      });
     } catch {
       showError(
         "Não conseguimos enviar 😥 Confere a internet e tenta de novo.",
@@ -370,16 +419,18 @@ const music = (function initMusic() {
     thanksEmoji.innerHTML = going
       ? "🎉"
       : '<img class="thanks-icon" src="img/icone-envelope.webp" alt="" width="185" height="128" />';
-    thanksText.textContent = going
-      ? `Ebaaa, ${name}! Mal podemos esperar pra pedalar com você${guests ? " e sua turma" : ""}! 🚲💗`
-      : `Que pena, ${name}! Vamos sentir sua falta. Obrigado por avisar 💗`;
+    thanksText.textContent =
+      (going
+        ? `Ebaaa, ${name}! Mal podemos esperar pra pedalar com você${guests ? " e sua turma" : ""}! 🚲💗`
+        : `Que pena, ${name}! Vamos sentir sua falta. Obrigado por avisar 💗`) +
+      (message ? " Seu recadinho chegou pra Maya 💌" : "");
 
     if (going) {
       const rect = thanks.getBoundingClientRect();
       burstConfetti(rect.left + rect.width / 2, rect.top + 40);
       doggo.cheer();
     }
-  });
+  }
 })();
 
 /* ---------------------------------------------------------
