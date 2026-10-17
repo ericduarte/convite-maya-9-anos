@@ -96,16 +96,16 @@
     <div class="grid-2">
 
       <section id="detalhes" class="parchment details reveal">
-        <h2 class="ribbon ribbon--pink"><span>🌼 Detalhes da Aventura ✦</span></h2>
+        <h2 class="ribbon-img"><img src="img/titulo-detalhes.webp" alt="Detalhes da Aventura" width="840" height="132" /></h2>
 
         <div class="details__body">
           <ul class="details__list">
             <!-- ✏️ Altere a data exibida aqui (e também EVENT_DATE no script.js) -->
-            <li><span class="details__icon" aria-hidden="true">📅</span>Quinta-feira, 22 de Outubro de 2026</li>
+            <li><img class="details__icon" src="img/icone-calendario.webp" alt="" width="127" height="128" />Quinta-feira, 22 de Outubro de 2026</li>
             <!-- ✏️ Altere o horário aqui -->
-            <li><span class="details__icon" aria-hidden="true">🕢</span>Às 19h30</li>
+            <li><img class="details__icon" src="img/icone-relogio.webp" alt="" width="118" height="128" />Às 19h30</li>
             <!-- ✏️ Altere o endereço aqui -->
-            <li><span class="details__icon" aria-hidden="true">📍</span><span>Rua Miguel Pedro de Sousa, 379<br />Vila São Pedro – Jucás/CE</span></li>
+            <li><img class="details__icon" src="img/icone-local.webp" alt="" width="101" height="128" /><span>Rua Miguel Pedro de Sousa, 379<br />Vila São Pedro – Jucás/CE</span></li>
           </ul>
 
           <img class="details__art" src="img/casinha.webp" alt="" width="340" height="472" loading="lazy" />
@@ -117,13 +117,13 @@
         -->
         <a href="https://www.google.com/maps/search/?api=1&amp;query=Rua+Miguel+Pedro+de+Sousa%2C+379%2C+Vila+S%C3%A3o+Pedro%2C+Juc%C3%A1s+-+CE"
            target="_blank" rel="noopener" class="btn btn--green">
-          📍 Ver no Google Maps <span aria-hidden="true">↗</span>
+          <img class="btn__icon" src="img/icone-local.webp" alt="" width="101" height="128" /> Ver no Google Maps <img class="btn__icon btn__icon--small" src="img/icone-externo.webp" alt="" width="98" height="96" />
         </a>
         <span class="vine-deco vine-deco--left" aria-hidden="true">🌿<br />🌸<br />🌿<br />🌼</span>
       </section>
 
       <section id="contador" class="parchment countdown-card reveal">
-        <h2 class="ribbon ribbon--cream"><span>⏳ Falta pouco para a festa!</span></h2>
+        <h2 class="ribbon-img"><img src="img/titulo-contador.webp" alt="Falta pouco para a festa!" width="840" height="157" /></h2>
 
         <div class="countdown" aria-live="polite">
           <div class="cd-box cd-box--green"><span id="cd-days">00</span><small>Dias</small></div>
@@ -132,7 +132,11 @@
           <div class="cd-box cd-box--yellow"><span id="cd-seconds">00</span><small>Segundos</small></div>
         </div>
         <p class="countdown__done" id="countdownDone" hidden>🎉 Chegou o grande dia! 🎉</p>
-        <img class="sleepy-cat" src="img/gatinho.webp" alt="" width="220" height="147" loading="lazy" />
+        <!-- Cachorrinho: toque para ele latir de alegria -->
+        <button class="doggo" id="doggo" aria-label="Fazer carinho no cachorrinho" title="Faz carinho!">
+          <span class="doggo__bubble" aria-hidden="true">Au au! 🐾</span>
+          <img src="img/cachorrinho.webp" alt="" width="420" height="358" loading="lazy" />
+        </button>
       </section>
     </div>
 
@@ -142,9 +146,9 @@
            alt="Placas: Boas amizades sempre nos levam mais longe" />
 
       <section id="rsvp" class="parchment rsvp reveal">
-        <h2 class="ribbon ribbon--pink"><span>💌 Confirme sua presença ✦</span></h2>
+        <h2 class="ribbon-img"><img src="img/titulo-confirme.webp" alt="Confirme sua presença" width="840" height="125" /></h2>
         <!-- ✏️ Altere a data limite de confirmação -->
-        <p class="rsvp__hint">🌸 Por favor, confirme até 20/10/2026 🌸</p>
+        <p class="rsvp__hint"><img class="inline-icon" src="img/icone-ampulheta.webp" alt="" width="92" height="128" /> Por favor, confirme até 20/10/2026</p>
         <p class="rsvp__divider" aria-hidden="true">♥</p>
 
         <!--
@@ -162,7 +166,7 @@
           </label>
 
           <div class="field">
-            <span class="field__label" id="guestsLabel">Acompanhantes</span>
+            <span class="field__label" id="guestsLabel"><img class="inline-icon" src="img/icone-pessoas.webp" alt="" width="142" height="128" /> Acompanhantes</span>
             <div class="stepper" role="group" aria-labelledby="guestsLabel">
               <button type="button" class="stepper__btn" data-step="-1" aria-label="Diminuir">−</button>
               <input type="number" id="guestCount" name="guests" value="0" min="0" max="10" inputmode="numeric" aria-labelledby="guestsLabel" />
@@ -184,15 +188,9 @@
         </div>
 
         <p class="rsvp__footer">🌸 Feito com <span class="heart">♥</span> para a Maya 🌸</p>
-
-        <!-- Cachorrinho: toque para ele latir de alegria -->
-        <button class="doggo" id="doggo" aria-label="Fazer carinho no cachorrinho" title="Faz carinho!">
-          <span class="doggo__bubble" aria-hidden="true">Au au! 🐾</span>
-          <img src="img/cachorrinho.webp" alt="" width="420" height="358" loading="lazy" />
-        </button>
       </section>
 
-      <img class="rsvp-scene__bike" src="img/bicicleta.webp" width="700" height="524" loading="lazy"
+      <img class="rsvp-scene__bike" src="img/bicicleta.webp" width="700" height="546" loading="lazy"
            alt="Bicicleta rosa com cestinha de flores" />
     </div>
 

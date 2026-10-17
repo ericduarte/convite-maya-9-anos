@@ -367,7 +367,9 @@ const music = (function initMusic() {
 
     form.hidden = true;
     thanks.hidden = false;
-    thanksEmoji.textContent = going ? "🎉" : "💌";
+    thanksEmoji.innerHTML = going
+      ? "🎉"
+      : '<img class="thanks-icon" src="img/icone-envelope.webp" alt="" width="185" height="128" />';
     thanksText.textContent = going
       ? `Ebaaa, ${name}! Mal podemos esperar pra pedalar com você${guests ? " e sua turma" : ""}! 🚲💗`
       : `Que pena, ${name}! Vamos sentir sua falta. Obrigado por avisar 💗`;
