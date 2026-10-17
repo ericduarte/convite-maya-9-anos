@@ -40,16 +40,29 @@
 
   <!--
     🎵 TRILHA SONORA
-    Por padrão toca uma caixinha de música gerada pelo navegador, sozinha
-    (no primeiro toque na página, que é quando o navegador libera o som).
-    Para usar um arquivo, coloque "musica.mp3" na pasta e troque useSynth para false no script.js.
+    musica.m4a = caixinha de música gravada. Toca sozinha ao abrir (se o navegador
+    deixar) ou no primeiro toque na página. Para trocar, substitua o arquivo.
   -->
-  <audio id="bgMusic" src="musica.mp3" loop preload="none"></audio>
+  <audio id="bgMusic" src="musica.m4a" loop preload="auto"></audio>
 
   <!-- Flor de música flutuante (aparece quando o vídeo sai da tela) -->
   <button id="musicFloat" class="flower-btn" data-music-toggle aria-label="Tocar música" aria-pressed="false" title="Tocar / pausar música">
     <span class="flower-btn__icon" aria-hidden="true">♫</span>
   </button>
+
+  <!--
+    💌 TELA DE ENTRADA
+    O toque em "Abrir convite" libera o som no navegador, então a música
+    começa junto com o convite (navegadores bloqueiam som antes de um toque).
+  -->
+  <div class="splash" id="splash" role="dialog" aria-modal="true" aria-labelledby="splashTitle">
+    <div class="splash__card">
+      <img class="splash__envelope" src="img/icone-envelope.webp" alt="" width="185" height="128" />
+      <p class="splash__title" id="splashTitle">Você recebeu um convite especial!</p>
+      <p class="splash__sub">A Maya está fazendo 9 anos 🌸</p>
+      <button type="button" class="btn btn--pink btn--big" id="splashBtn">💌 Abrir convite</button>
+    </div>
+  </div>
 
   <main class="page">
 
@@ -104,7 +117,7 @@
             <!-- ✏️ Altere a data exibida aqui (e também EVENT_DATE no script.js) -->
             <li><img class="details__icon" src="img/icone-calendario.webp" alt="" width="127" height="128" />Quinta-feira, 22 de Outubro de 2026</li>
             <!-- ✏️ Altere o horário aqui -->
-            <li><img class="details__icon" src="img/icone-relogio.webp" alt="" width="118" height="128" />Às 19h30</li>
+            <li><img class="details__icon" src="img/icone-relogio.webp" alt="" width="118" height="128" />Às 19h00</li>
             <!-- ✏️ Altere o endereço aqui -->
             <li><img class="details__icon" src="img/icone-local.webp" alt="" width="101" height="128" /><span>Rua Miguel Pedro de Sousa, 379<br />Vila São Pedro – Jucás/CE</span></li>
           </ul>

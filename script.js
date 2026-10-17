@@ -4,7 +4,7 @@
 
 /* ✏️ CONFIGURAÇÕES — altere aqui */
 // Data e hora da festa (formato: AAAA-MM-DDTHH:MM:SS, horário de Brasília)
-const EVENT_DATE = new Date("2026-10-22T19:30:00-03:00");
+const EVENT_DATE = new Date("2026-10-22T19:00:00-03:00");
 // Link do App da Web do Google Apps Script que grava as confirmações na planilha
 // (veja apps-script.gs). Termina em /exec.
 const SHEETS_URL =
@@ -89,9 +89,10 @@ const music = (function initMusic() {
   const buttons = document.querySelectorAll("[data-music-toggle]");
   const floatBtn = document.getElementById("musicFloat");
   const audio = document.getElementById("bgMusic");
-  // Caixinha de música gerada pelo navegador (padrão). Para usar um arquivo
-  // em <audio id="bgMusic">, troque para false.
-  let useSynth = true;
+  // Toca o arquivo de <audio id="bgMusic"> (musica.m4a = a caixinha de música
+  // gravada). Arquivo funciona até com o iPhone no silencioso; se ele faltar,
+  // cai para a caixinha gerada pelo navegador.
+  let useSynth = false;
   let playing = false;
   let userPaused = false; // pausou na flor: não volta a tocar sozinha
 
@@ -196,18 +197,23 @@ const music = (function initMusic() {
     clearInterval(timer);
   }
 
+  // Devolve true se começou a tocar. audio.play() é chamado direto no toque
+  // (sem await antes), senão o navegador não considera como gesto do usuário.
   async function play() {
     if (!useSynth) {
       try {
-        audio.volume = 0.5;
+        audio.volume = 0.6;
         await audio.play();
-      } catch {
-        useSynth = true;
+      } catch (err) {
+        // Bloqueado (ainda sem toque): tenta de novo no próximo gesto
+        if (err && err.name === "NotAllowedError") return false;
+        useSynth = true; // arquivo com problema: usa a caixinha gerada
       }
     }
     if (useSynth) synthStart();
     playing = true;
     render();
+    return true;
   }
 
   function pause() {
@@ -261,31 +267,48 @@ const music = (function initMusic() {
   /* --- Toca sozinha ---
      Navegadores só liberam som depois de uma interação. Tenta ao abrir e,
      se estiver bloqueado, começa no primeiro toque/clique/tecla na página. */
-  if (useSynth) {
+  {
     const events = ["pointerdown", "pointerup", "touchend", "click", "keydown"];
-    const stop = () => events.forEach((ev) => document.removeEventListener(ev, onGesture, true));
+    const stop = () =>
+      events.forEach((ev) => document.removeEventListener(ev, onGesture, true));
+    let trying = false;
     const onGesture = (e) => {
       // Os botões de música e de som do vídeo cuidam de si mesmos
       if (e.target.closest?.("[data-music-toggle], #videoSound")) return;
-      if (userPaused) return stop();
-      if (!playing) play();
-      else ensureCtx().resume();
-      if (ctx && ctx.state === "running") stop();
+      if (userPaused || playing) return stop();
+      if (trying) return;
+      trying = true;
+      play().then((ok) => {
+        trying = false;
+        if (ok) stop();
+      });
     };
     events.forEach((ev) => document.addEventListener(ev, onGesture, true));
 
     // Alguns navegadores (geralmente no computador) já permitem tocar ao abrir
-    try {
-      if (ensureCtx().state === "running") {
-        play();
-        stop();
-      }
-    } catch {
-      /* sem Web Audio: segue sem música */
-    }
+    play().then((ok) => ok && stop());
   }
 
   return { play, pause };
+})();
+
+/* ---------------------------------------------------------
+   4b. Tela de entrada — o toque libera o som e a música começa
+   --------------------------------------------------------- */
+(function initSplash() {
+  const splash = document.getElementById("splash");
+  const btn = document.getElementById("splashBtn");
+  document.documentElement.classList.add("has-splash");
+  btn.focus();
+
+  btn.addEventListener("click", (e) => {
+    music.play(); // chamado direto no toque: o navegador libera o som
+    document.getElementById("heroVideo").play().catch(() => {});
+    splash.classList.add("is-hidden");
+    document.documentElement.classList.remove("has-splash");
+    burstConfetti(e.clientX || innerWidth / 2, e.clientY || innerHeight / 2);
+    splash.addEventListener("transitionend", () => splash.remove(), { once: true });
+  });
 })();
 
 /* ---------------------------------------------------------
