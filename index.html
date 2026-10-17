@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>A Aventura da Maya 🌸 | Convite de 9 anos</title>
+  <meta name="description" content="Você está convidado para a aventura da Maya! Venha pedalar com a gente nessa festa de 9 anos." />
+  <meta name="theme-color" content="#f6e9cf" />
+
+  <!-- Fontes: Alegreya (texto de livro de histórias) + Fredoka (letras pintadas nas placas) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;700&family=Fredoka:wght@600&display=swap" rel="stylesheet" />
+
+  <link rel="preload" as="image" href="img/fundo.webp" />
+  <link rel="preload" as="image" href="img/moldura.webp" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!--
+    🖼️ IMAGENS
+    As versões otimizadas ficam em img/ (geradas a partir de assets/).
+    Para trocar alguma, substitua o arquivo em img/ mantendo o mesmo nome.
+  -->
+  <div class="scenery" aria-hidden="true"></div>
+
+  <!-- Canvas de partículas (pétalas, borboletas e docinhos) -->
+  <canvas id="particles" aria-hidden="true"></canvas>
+
+  <!-- Guirlandas de flores nos cantos de cima (balançam com o "vento") -->
+  <img class="garland garland--left" src="img/guirlanda.webp" alt="" width="640" height="491" aria-hidden="true" />
+  <img class="garland garland--right" src="img/guirlanda.webp" alt="" width="640" height="491" aria-hidden="true" />
+
+  <!-- Lamparina pendurada: toque para acender/apagar -->
+  <button class="lantern is-lit" id="lantern" aria-label="Apagar a lamparina" aria-pressed="true" title="Acender / apagar">
+    <span class="lantern__glow" aria-hidden="true"></span>
+    <img src="img/lamparina.webp" alt="" width="360" height="538" />
+  </button>
+
+  <!--
+    🎵 TRILHA SONORA
+    Coloque sua música instrumental na pasta com o nome "musica.mp3" (ou troque o src).
+    Se o arquivo não existir, toca uma caixinha de música gerada pelo navegador.
+  -->
+  <audio id="bgMusic" src="musica.mp3" loop preload="none"></audio>
+
+  <!-- Flor de música flutuante (aparece quando o vídeo sai da tela) -->
+  <button id="musicFloat" class="flower-btn" data-music-toggle aria-label="Tocar música" aria-pressed="false" title="Tocar / pausar música">
+    <span class="flower-btn__icon" aria-hidden="true">♫</span>
+  </button>
+
+  <main class="page">
+
+    <!-- ============ SEÇÃO 1: BOAS-VINDAS (HERO) ============ -->
+    <section id="hero" class="hero">
+
+      <!-- Placas de madeira = navegação (o texto é HTML sobre a imagem img/placas-nav.webp) -->
+      <nav class="signnav reveal" aria-label="Seções do convite">
+        <img src="img/placas-nav.webp" alt="" width="560" height="747" />
+        <a href="#detalhes" class="signnav__plank signnav__plank--1">Detalhes</a>
+        <a href="#contador" class="signnav__plank signnav__plank--2">Contagem</a>
+        <a href="#rsvp" class="signnav__plank signnav__plank--3">Confirmar</a>
+      </nav>
+
+      <div class="video-frame reveal" id="videoFrame">
+        <!--
+          🎬 VÍDEO DE CAPA
+          Para trocar, substitua o "src" do <source> pelo nome do seu arquivo.
+        -->
+        <video id="heroVideo" class="video-frame__video" autoplay loop muted playsinline preload="auto">
+          <source src="gemini_generated_video_ea6f73af.mp4" type="video/mp4" />
+          Seu navegador não suporta vídeos em HTML5.
+        </video>
+        <img class="video-frame__border" src="img/moldura.webp" alt="" width="1100" height="740" />
+
+        <!-- Áreas clicáveis sobre a flor de música e o alto-falante pintados na moldura -->
+        <button id="musicToggle" class="frame-hit frame-hit--music" data-music-toggle aria-label="Tocar música" aria-pressed="false" title="Tocar / pausar música"></button>
+        <button id="videoSound" class="frame-hit frame-hit--sound" aria-label="Ativar som do vídeo" aria-pressed="false" title="Som do vídeo"></button>
+      </div>
+
+      <div class="hero__text">
+        <!-- ✏️ O título é uma imagem (img/titulo.webp); o texto alternativo fica no alt -->
+        <h1 class="hero__title reveal">
+          <img src="img/titulo.webp" width="1000" height="655"
+               alt="Você está convidado para a aventura da Maya! Venha pedalar com a gente nessa festa de 9 anos" />
+        </h1>
+
+        <a href="#detalhes" class="btn btn--pink btn--big reveal" id="openInvite">
+          Abrir Convite <span aria-hidden="true">›</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============ SEÇÃO 2: DETALHES + CONTADOR ============ -->
+    <div class="grid-2">
+
+      <section id="detalhes" class="parchment details reveal">
+        <h2 class="ribbon ribbon--pink"><span>🌼 Detalhes da Aventura ✦</span></h2>
+
+        <div class="details__body">
+          <ul class="details__list">
+            <!-- ✏️ Altere a data exibida aqui (e também EVENT_DATE no script.js) -->
+            <li><span class="details__icon" aria-hidden="true">📅</span>Quinta-feira, 22 de Outubro de 2026</li>
+            <!-- ✏️ Altere o horário aqui -->
+            <li><span class="details__icon" aria-hidden="true">🕢</span>Às 19h30</li>
+            <!-- ✏️ Altere o endereço aqui -->
+            <li><span class="details__icon" aria-hidden="true">📍</span><span>Rua Miguel Pedro de Sousa, 379<br />Vila São Pedro – Jucás/CE</span></li>
+          </ul>
+
+          <img class="details__art" src="img/casinha.webp" alt="" width="340" height="472" loading="lazy" />
+        </div>
+
+        <!--
+          🗺️ LINK DO GOOGLE MAPS
+          Abra o local no Google Maps → "Compartilhar" → "Copiar link" e cole no href abaixo.
+        -->
+        <a href="https://www.google.com/maps/search/?api=1&amp;query=Rua+Miguel+Pedro+de+Sousa%2C+379%2C+Vila+S%C3%A3o+Pedro%2C+Juc%C3%A1s+-+CE"
+           target="_blank" rel="noopener" class="btn btn--green">
+          📍 Ver no Google Maps <span aria-hidden="true">↗</span>
+        </a>
+        <span class="vine-deco vine-deco--left" aria-hidden="true">🌿<br />🌸<br />🌿<br />🌼</span>
+      </section>
+
+      <section id="contador" class="parchment countdown-card reveal">
+        <h2 class="ribbon ribbon--cream"><span>⏳ Falta pouco para a festa!</span></h2>
+
+        <div class="countdown" aria-live="polite">
+          <div class="cd-box cd-box--green"><span id="cd-days">00</span><small>Dias</small></div>
+          <div class="cd-box cd-box--pink"><span id="cd-hours">00</span><small>Horas</small></div>
+          <div class="cd-box cd-box--blue"><span id="cd-minutes">00</span><small>Minutos</small></div>
+          <div class="cd-box cd-box--yellow"><span id="cd-seconds">00</span><small>Segundos</small></div>
+        </div>
+        <p class="countdown__done" id="countdownDone" hidden>🎉 Chegou o grande dia! 🎉</p>
+        <img class="sleepy-cat" src="img/gatinho.webp" alt="" width="220" height="147" loading="lazy" />
+      </section>
+    </div>
+
+    <!-- ============ SEÇÃO 3: RSVP ============ -->
+    <div class="rsvp-scene">
+      <img class="rsvp-scene__sign" src="img/placas.webp" width="520" height="779" loading="lazy"
+           alt="Placas: Boas amizades sempre nos levam mais longe" />
+
+      <section id="rsvp" class="parchment rsvp reveal">
+        <h2 class="ribbon ribbon--pink"><span>💌 Confirme sua presença ✦</span></h2>
+        <!-- ✏️ Altere a data limite de confirmação -->
+        <p class="rsvp__hint">🌸 Por favor, confirme até 20/10/2026 🌸</p>
+        <p class="rsvp__divider" aria-hidden="true">♥</p>
+
+        <!--
+          📨 ENVIO DO RSVP
+          As confirmações são gravadas numa planilha do Google.
+          Cole o link do Apps Script em SHEETS_URL no script.js (veja apps-script.gs).
+        -->
+        <form id="rsvpForm" class="rsvp__form" novalidate>
+          <label class="field">
+            <span class="field__label">Seu nome</span>
+            <span class="field__input">
+              <span aria-hidden="true">👤</span>
+              <input type="text" id="guestName" name="name" placeholder="Seu nome" autocomplete="name" required />
+            </span>
+          </label>
+
+          <div class="field">
+            <span class="field__label" id="guestsLabel">Acompanhantes</span>
+            <div class="stepper" role="group" aria-labelledby="guestsLabel">
+              <button type="button" class="stepper__btn" data-step="-1" aria-label="Diminuir">−</button>
+              <input type="number" id="guestCount" name="guests" value="0" min="0" max="10" inputmode="numeric" aria-labelledby="guestsLabel" />
+              <button type="button" class="stepper__btn stepper__btn--plus" data-step="1" aria-label="Aumentar">+</button>
+            </div>
+          </div>
+
+          <div class="rsvp__actions">
+            <button type="submit" class="btn btn--pink" data-answer="yes">♥ Vou com certeza!</button>
+            <button type="submit" class="btn btn--cream" data-answer="no">✕ Não poderei ir</button>
+          </div>
+
+          <p class="rsvp__error" id="rsvpError" role="alert" hidden>Ops! Escreve seu nome pra gente 🌷</p>
+        </form>
+
+        <div class="rsvp__thanks" id="rsvpThanks" hidden>
+          <p class="rsvp__thanks-emoji" id="thanksEmoji">🎉</p>
+          <p class="rsvp__thanks-text" id="thanksText"></p>
+        </div>
+
+        <p class="rsvp__footer">🌸 Feito com <span class="heart">♥</span> para a Maya 🌸</p>
+
+        <!-- Cachorrinho: toque para ele latir de alegria -->
+        <button class="doggo" id="doggo" aria-label="Fazer carinho no cachorrinho" title="Faz carinho!">
+          <span class="doggo__bubble" aria-hidden="true">Au au! 🐾</span>
+          <img src="img/cachorrinho.webp" alt="" width="420" height="358" loading="lazy" />
+        </button>
+      </section>
+
+      <img class="rsvp-scene__bike" src="img/bicicleta.webp" width="700" height="524" loading="lazy"
+           alt="Bicicleta rosa com cestinha de flores" />
+    </div>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
